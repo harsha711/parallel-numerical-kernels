@@ -1,0 +1,13 @@
+# Downloaded datasets and generated build products
+matrices/
+*.o
+spmv
+spmv_csr
+spmv_omp_csr
+spmv_omp_ell
+spmv_simd_csr
+spmv_simd_ell
+
+# Final submission package
+HW2-*/
+HW2-*.zip
