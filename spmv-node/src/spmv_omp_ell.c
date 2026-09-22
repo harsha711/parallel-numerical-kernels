@@ -12,6 +12,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <omp.h>
 #include "spmv_omp.h"
@@ -35,28 +36,34 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
     c->partition = opts->partition;
     c->nthreads  = opts->nthreads;
 
-    /* TODO (Task 1): build the COLUMN-MAJOR ELL copy of A in c->ell.
-     *
-     *   K = csr_max_row_len(A)                      (formats_ell.h)
-     *   col_idx and vals are each num_rows*K long, entry (i,k) at k*num_rows+i
-     *   short rows are padded with col_idx 0 and val 0.0f
-     *
-     * calloc, not malloc: the padding value for both arrays is zero, and
-     * col_idx 0 is a valid column so a kernel may multiply padded slots
-     * unconditionally. Return nonzero if the allocation fails -- num_rows*K
-     * can be far larger than nnz, so this really can fail on a matrix whose
-     * CSR fits comfortably.
-     *
-     * The placeholder below leaves an empty ELL, which fails the check. */
     c->ell.num_rows     = A->num_rows;
     c->ell.num_cols     = A->num_cols;
     c->ell.num_nonzeros = A->num_nonzeros;
-    c->ell.max_row_len  = 0;
-    c->ell.col_idx      = NULL;
-    c->ell.vals         = NULL;
+    c->ell.max_row_len  = csr_max_row_len(A);
+
+    size_t m = (size_t)A->num_rows;
+    size_t K = (size_t)c->ell.max_row_len;
+    if (m && K > SIZE_MAX / sizeof(float) / m) { free(c); return 1; }
+    size_t slots = m * K;
+    c->ell.col_idx = (int*)calloc(slots ? slots : 1, sizeof(int));
+    c->ell.vals    = (float*)calloc(slots ? slots : 1, sizeof(float));
+    if (!c->ell.col_idx || !c->ell.vals) {
+        delete_ell_matrix(&c->ell);
+        free(c);
+        return 1;
+    }
+    for (int i = 0; i < A->num_rows; i++) {
+        int row_start = A->row_ptr[i];
+        int row_len = A->row_ptr[i + 1] - row_start;
+        for (int k = 0; k < row_len; k++) {
+            size_t slot = (size_t)k * m + (size_t)i;
+            c->ell.col_idx[slot] = A->col_idx[row_start + k];
+            c->ell.vals[slot] = A->vals[row_start + k];
+        }
+    }
 
     c->start = (int*)alloc_array(c->nthreads + 1, sizeof(int));
-    if (!c->start) { free(c); return 1; }
+    if (!c->start) { delete_ell_matrix(&c->ell); free(c); return 1; }
 
     /* TODO (Task 3b): as in spmv_omp_csr.c, split the rows so that each thread
      * gets about the same amount of work. Note what "work" means here: every
@@ -78,21 +85,10 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
     memset(c->stats.rows, 0, sizeof c->stats.rows);
     memset(c->stats.work, 0, sizeof c->stats.work);
 
-    /* TODO (Task 2): the ELL SpMV, parallelised over rows with
-     * schedule(runtime), honouring c->partition as in spmv_omp_csr.c, and
-     * recording per-thread rows/work into c->stats.
-     *
-     * With the column-major layout, slot k of row i is at k*num_rows + i:
-     *
-     *   for each row i:  sum over k in [0,K) of vals[k*m+i] * x[col_idx[k*m+i]]
-     *
-     * ell_spmv() in formats_ell.h is the sequential version to start from. Padded
-     * slots multiply to exactly 0.0f, so there is no tail test in the inner
-     * loop -- that fixed trip count is the whole point of the format. */
-    for (int i = 0; i < A->num_rows; i++)
-        y[i] = 0.0f;
-
-    (void)x;
+    /* Scalar reference path for Task 1; Task 2 will distribute rows. */
+    ell_spmv(&c->ell, x, y);
+    c->stats.rows[0] = A->num_rows;
+    c->stats.work[0] = (long long)A->num_rows * c->ell.max_row_len;
 }
 
 

@@ -14,6 +14,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <omp.h>
 #include <immintrin.h>
@@ -38,16 +39,34 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
     c->partition = opts->partition;
     c->nthreads  = opts->nthreads;
 
-    /* TODO (Task 1): the same column-major ELL build as in spmv_omp_ell.c. */
     c->ell.num_rows     = A->num_rows;
     c->ell.num_cols     = A->num_cols;
     c->ell.num_nonzeros = A->num_nonzeros;
-    c->ell.max_row_len  = 0;
-    c->ell.col_idx      = NULL;
-    c->ell.vals         = NULL;
+    c->ell.max_row_len  = csr_max_row_len(A);
+
+    size_t m = (size_t)A->num_rows;
+    size_t K = (size_t)c->ell.max_row_len;
+    if (m && K > SIZE_MAX / sizeof(float) / m) { free(c); return 1; }
+    size_t slots = m * K;
+    c->ell.col_idx = (int*)calloc(slots ? slots : 1, sizeof(int));
+    c->ell.vals    = (float*)calloc(slots ? slots : 1, sizeof(float));
+    if (!c->ell.col_idx || !c->ell.vals) {
+        delete_ell_matrix(&c->ell);
+        free(c);
+        return 1;
+    }
+    for (int i = 0; i < A->num_rows; i++) {
+        int row_start = A->row_ptr[i];
+        int row_len = A->row_ptr[i + 1] - row_start;
+        for (int k = 0; k < row_len; k++) {
+            size_t slot = (size_t)k * m + (size_t)i;
+            c->ell.col_idx[slot] = A->col_idx[row_start + k];
+            c->ell.vals[slot] = A->vals[row_start + k];
+        }
+    }
 
     c->start = (int*)alloc_array(c->nthreads + 1, sizeof(int));
-    if (!c->start) { free(c); return 1; }
+    if (!c->start) { delete_ell_matrix(&c->ell); free(c); return 1; }
     for (int t = 0; t <= c->nthreads; t++)
         c->start[t] = (t == 0) ? 0 : A->num_rows;
 
@@ -83,10 +102,10 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
      * scalar version, so this one stays close to the baseline. Where a SIMD
      * kernel reorders a single row's sum -- as the CSR version must -- expect
      * a small nonzero relative error. That is rounding, not a bug. */
-    for (int i = 0; i < A->num_rows; i++)
-        y[i] = 0.0f;
-
-    (void)x;
+    /* Scalar reference path while the Task 4 vector kernel is pending. */
+    ell_spmv(&c->ell, x, y);
+    c->stats.rows[0] = A->num_rows;
+    c->stats.work[0] = (long long)A->num_rows * c->ell.max_row_len;
 }
 
 
