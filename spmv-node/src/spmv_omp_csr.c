@@ -77,15 +77,23 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
     memset(c->stats.work, 0, sizeof c->stats.work);
 
     if (c->partition == SPMV_PART_ROW) {
-        /* TODO (Task 2/3a): parallelise this over the rows. Use
-         * schedule(runtime) so --schedule picks the schedule without a
-         * recompile, and record per-thread rows/work into c->stats for the
-         * Task 3 imbalance numbers.
-         *
-         * Row i's nonzeros are A->vals[k] at columns A->col_idx[k] for k in
-         * [A->row_ptr[i], A->row_ptr[i+1]). Overwrite y[i]; do not accumulate. */
-        for (int i = 0; i < A->num_rows; i++)
-            y[i] = 0.0f;
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0, work = 0;
+            #pragma omp for schedule(runtime)
+            for (int i = 0; i < A->num_rows; i++) {
+                int begin = A->row_ptr[i], end = A->row_ptr[i + 1];
+                float sum = 0.0f;
+                for (int k = begin; k < end; k++)
+                    sum += A->vals[k] * x[A->col_idx[k]];
+                y[i] = sum;
+                rows++;
+                work += end - begin;
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = work;
+        }
     } else {
         /* TODO (Task 3b): same kernel, but each thread walks its own row range
          * [c->start[t], c->start[t+1]) from setup -- one fixed range per
@@ -94,7 +102,6 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
             y[i] = 0.0f;
     }
 
-    (void)x;
 }
 
 

@@ -85,10 +85,32 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
     memset(c->stats.rows, 0, sizeof c->stats.rows);
     memset(c->stats.work, 0, sizeof c->stats.work);
 
-    /* Scalar reference path for Task 1; Task 2 will distribute rows. */
-    ell_spmv(&c->ell, x, y);
-    c->stats.rows[0] = A->num_rows;
-    c->stats.work[0] = (long long)A->num_rows * c->ell.max_row_len;
+    if (c->partition == SPMV_PART_ROW) {
+        const int m = c->ell.num_rows;
+        const int K = c->ell.max_row_len;
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0;
+            #pragma omp for schedule(runtime)
+            for (int i = 0; i < m; i++) {
+                float sum = 0.0f;
+                for (int k = 0; k < K; k++) {
+                    size_t slot = (size_t)k * (size_t)m + (size_t)i;
+                    sum += c->ell.vals[slot] * x[c->ell.col_idx[slot]];
+                }
+                y[i] = sum;
+                rows++;
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = rows * K;
+        }
+    } else {
+        /* Task 3 will add fixed row ranges for nonzero partitioning. */
+        ell_spmv(&c->ell, x, y);
+        c->stats.rows[0] = A->num_rows;
+        c->stats.work[0] = (long long)A->num_rows * c->ell.max_row_len;
+    }
 }
 
 
