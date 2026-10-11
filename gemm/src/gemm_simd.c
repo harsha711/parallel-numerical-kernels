@@ -60,19 +60,26 @@ void gemm(int n, const float *A, const float *B, float *C,
                 int group = width / 8;
                 int j_vec_end = bj + group * 8;
 
-                for (int i = bi; i < i_end; i++)
+                for (int i = bi; i < i_end; i = i + 2)
                 {
                     for (int j = bj; j < j_vec_end; j = j + 8)
                     {
-                        __m256 acc = _mm256_setzero_ps();
+                        __m256 acc0 = _mm256_setzero_ps();
+                        __m256 acc1 = _mm256_setzero_ps();
                         for (int k = bk; k < k_end; k++)
                         {
-                            acc = _mm256_fmadd_ps(_mm256_set1_ps(A[(size_t)i * n + k]),
-                                                  _mm256_loadu_ps(&B[(size_t)k * n + j]),
-                                                  acc);
+                            __m256 bvec = _mm256_loadu_ps(&B[(size_t)k * n + j]);
+                            acc0 = _mm256_fmadd_ps(_mm256_set1_ps(A[(size_t)i * n + k]),
+                                                   bvec,
+                                                   acc0);
+                            acc1 = _mm256_fmadd_ps(_mm256_set1_ps(A[(size_t)(i + 1) * n + k]),
+                                                   bvec,
+                                                   acc1);
                         }
-                        acc = _mm256_add_ps(acc, _mm256_loadu_ps(&C[(size_t)i * n + j]));
-                        _mm256_storeu_ps(&C[(size_t)i * n + j], acc);
+                        acc0 = _mm256_add_ps(acc0, _mm256_loadu_ps(&C[(size_t)i * n + j]));
+                        acc1 = _mm256_add_ps(acc1, _mm256_loadu_ps(&C[(size_t)(i + 1) * n + j]));
+                        _mm256_storeu_ps(&C[(size_t)i * n + j], acc0);
+                        _mm256_storeu_ps(&C[(size_t)(i + 1) * n + j], acc1);
                     }
                     for (int j = j_vec_end; j < j_end; j++)
                     {
