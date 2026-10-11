@@ -1,0 +1,8 @@
+*.o
+gemm_naive
+gemm_tiled
+gemm_omp
+gemm_simd
+gemm_mpi
+stream
+gmon.out
