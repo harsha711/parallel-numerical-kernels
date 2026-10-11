@@ -56,9 +56,13 @@ void gemm(int n, const float *A, const float *B, float *C,
                 int k_end = min_int(bk + b, n);
                 int j_end = min_int(bj + b, n);
 
+                int width = j_end - bj;
+                int group = width / 8;
+                int j_vec_end = bj + group * 8;
+
                 for (int i = bi; i < i_end; i++)
                 {
-                    for (int j = bj; j < j_end; j = j + 8)
+                    for (int j = bj; j < j_vec_end; j = j + 8)
                     {
                         __m256 acc = _mm256_setzero_ps();
                         for (int k = bk; k < k_end; k++)
@@ -69,6 +73,13 @@ void gemm(int n, const float *A, const float *B, float *C,
                         }
                         acc = _mm256_add_ps(acc, _mm256_loadu_ps(&C[(size_t)i * n + j]));
                         _mm256_storeu_ps(&C[(size_t)i * n + j], acc);
+                    }
+                    for (int j = j_vec_end; j < j_end; j++)
+                    {
+                        for (int k = bk; k < k_end; k++)
+                        {
+                            C[(size_t)i * n + j] += A[(size_t)i * n + k] * B[(size_t)k * n + j];
+                        }
                     }
                 }
             }
