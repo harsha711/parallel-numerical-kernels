@@ -123,6 +123,111 @@ comments, make the fallback tile 64.
 Next for the report: compare with `./gemm_naive --n=1024` and sweep `--tile`
 (16, 32, 64, 128) to separate the gain from ikj from the gain from blocking.
 
+## 6. Remainders with a loop condition instead of a formula
+
+A vector loop that steps by 8 must only start a group if all 8 columns fit.
+Ask that question in the loop condition, and let the leftover loop continue
+from the same variable:
+
+```c
+int j = bj;
+for (; j + 8 <= j_end; j += 8) { /* vector */ }
+for (; j < j_end; j++)         { /* scalar tail, at most 7 columns */ }
+```
+
+Formula version that also works: `j_vec_end = bj + ((j_end - bj) / 8) * 8`. The
+wrong version was `(j_end / 8) * 8`: it rounds the **absolute** column, but
+the loop starts at `bj` and stops at `bj, bj+8, ...`, so the two only agree
+when `bj` is a multiple of 8 (that is why tiles 8 and 64 passed and 1, 7, 20,
+30, 100 failed). Use the tile's width `j_end - bj`, not the absolute column.
+
+Same pattern for rows with a 2-row kernel: `for (; i + 2 <= i_end; i += 2)`
+and then `for (; i < i_end; i++)` for the leftover row (odd tile height).
+The scalar tail of a 2-row kernel must cover both rows (`for r = i; r < i+2`).
+
+## 7. Why register blocking needs many accumulators (latency vs throughput)
+
+One vector FMA takes about 4 cycles to produce its result (latency). The CPU
+can start 2 new FMAs every cycle (throughput) -- but only if they do not need
+each other's result.
+
+With one accumulator every FMA needs the previous one's result:
+
+```
+cycle:  1  2  3  4  5  6  7  8  9
+FMA 1:  [-----------]
+FMA 2:               [-----------]
+FMA 3:                            [---
+```
+
+One FMA starts per 4 cycles, 1/8 of what the unit can do.
+
+With 8 independent accumulators there is always one that is not waiting:
+
+```
+cycle 1: start chain 1, 2     cycle 2: start chain 3, 4
+cycle 3: start chain 5, 6     cycle 4: start chain 7, 8
+cycle 5: chain 1 and 2 are done, start their next FMAs ...
+```
+
+Why 8: the pipe accepts 2 FMAs per cycle and each stays 4 cycles, so
+2 x 4 = 8 FMAs are in flight; each belongs to a different accumulator (the
+same accumulator cannot have two in flight). Fewer accumulators leave the pipe
+partly empty.
+
+Mixing up two different "8"s: one register holds 8 floats (the SIMD width, the
+lanes of one vector); "8 accumulators" means 8 separate registers. The 4x2
+kernel is 4 rows x 2 vectors of 8 columns = 8 registers = 64 results of C per
+pass over k.
+
+The second reason is loads per FMA. Rows share the load of B (it has no `i`
+in `B[k*n + j]`); each row needs its own broadcast of A (`A[i*n + k]` has `i`):
+
+| kernel | loads per k | FMAs per k | loads per FMA |
+|---|---|---|---|
+| 1 row x 1 vector | 2 | 1 | 2.0 |
+| 2 rows x 1 vector | 3 (1 B + 2 A) | 2 | 1.5 |
+| 4 rows x 2 vectors | 6 (2 B + 4 A) | 8 | 0.75 |
+
+Register budget on AVX2 (16 vector registers): 8 accumulators + 2 B vectors +
+1 broadcast = 11, so nothing spills to memory.
+
+### Why 2 vectors of columns (4 rows x 2) and not another 8-accumulator shape
+
+R rows x V vectors gives R x V accumulators. Loads per k:
+
+| shape | B loads | A broadcasts | total | FMAs | loads per FMA |
+|---|---|---|---|---|---|
+| 8 rows x 1 vector | 1 | 8 | 9 | 8 | 1.1 |
+| 4 rows x 2 vectors | 2 | 4 | 6 | 8 | 0.75 |
+| 2 rows x 4 vectors | 4 | 2 | 6 | 8 | 0.75 |
+
+8x1 is worse because every row needs its own broadcast of A. 4x2 and 2x4 tie;
+4x2 is the usual pick (the 2 B vectors are one contiguous 64-byte line of 16
+floats).
+
+### Registers vs L1 cache (a mix-up worth remembering)
+
+"A vector holds only 8 floats" is about **registers**, not the L1 cache.
+
+| level | size | holds |
+|---|---|---|
+| one vector register | 32 bytes | 8 floats (`__m256`) |
+| all 16 vector registers | 512 bytes | 128 floats |
+| L1 data cache (per core) | 32-48 KB | ~8,000-12,000 floats |
+| L2 | ~1-2 MB | a few hundred thousand floats |
+
+A 64x64 float tile is 16 KB, so one tile fits in L1. The two optimizations work
+at different levels:
+
+- **Blocking (tile size)** keeps the pieces of A, B, C in **L1/L2** so loads do
+  not go to main memory.
+- **Register blocking (micro-kernel)** keeps the accumulators in **registers**
+  for the whole k loop, so C is not loaded or stored inside it.
+
+Check the real sizes with `lscpu | grep -i cache` and use them to explain the
+best tile in the report (three tile-sized float matrices = 3 x tile^2 x 4 bytes).
+
 ---
 
 # Measurements log
@@ -185,6 +290,12 @@ Missing for S(t), E(t), Amdahl's f: **T(1) at n=2048**, plus t = 2, 4, 12.
 |---|---|---|
 | compiler auto-vectorized (omp loop built with -march=native) | 91.8, 80.3 (same binary, two runs: noise) | 3.2e-07 |
 | hand-written 1 row x 1 vector (8 columns), acc in register over k | 90.3 | 1.2e-06 |
+| hand-written 2 rows x 1 vector (B load shared), scalar tails, odd-row handling | 113.6 (1 iter), 97.4 (2 iters): noise | 1.2e-06 |
+| reference 4 rows x 2 vectors (ChatGPT version, kept outside src) | 169.3 | 1.3e-07 .. 2.3e-07 |
+
+The 2x1 kernel passes tiles 1, 7, 8, 20, 30, 64, 100, 512 at n=160. The 2x1
+gain over 1x1 is about 10-25% (noisy); expected, because 2 accumulators still
+leave the FMA pipe mostly empty (see section 7).
 
 - Auto-vectorization is only ~1.8x over scalar omp (51 -> 92), not 8x. The
   loop still loads and stores C for every k step, so it is memory-op bound.
@@ -211,6 +322,11 @@ Missing for S(t), E(t), Amdahl's f: **T(1) at n=2048**, plus t = 2, 4, 12.
 - Inside element loops use `i, j, k`, never the block corners `bi, bj, bk`;
   row-major index is `row * n + col`, never `* 8`. A load and a store of the
   same variable must use the same address expression.
+- A loop `for (int r = ...; ...; i++)` that steps a different variable than the
+  one in the condition never ends (this hung the test). Use `timeout 20 ./gemm_simd ...`
+  when testing a kernel you just edited.
+- A 2-row kernel stores each accumulator to its own row: `C[(i+1)*n + j]` for
+  the second one, same address as the load it was added to.
 - `-march=native` ties a binary to the CPU that built it; build on the node
   you run on.
 
