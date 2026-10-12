@@ -60,7 +60,10 @@ void gemm(int n, const float *A, const float *B, float *C,
                 int group = width / 8;
                 int j_vec_end = bj + group * 8;
 
-                for (int i = bi; i < i_end; i = i + 2)
+                int i = bi;
+
+                /* Row pairs: rows i and i+1 share every load of B. */
+                for (; i + 2 <= i_end; i = i + 2)
                 {
                     for (int j = bj; j < j_vec_end; j = j + 8)
                     {
@@ -80,6 +83,33 @@ void gemm(int n, const float *A, const float *B, float *C,
                         acc1 = _mm256_add_ps(acc1, _mm256_loadu_ps(&C[(size_t)(i + 1) * n + j]));
                         _mm256_storeu_ps(&C[(size_t)i * n + j], acc0);
                         _mm256_storeu_ps(&C[(size_t)(i + 1) * n + j], acc1);
+                    }
+                    for (int r = i; r < i + 2; r++)
+                    {
+                        for (int j = j_vec_end; j < j_end; j++)
+                        {
+                            for (int k = bk; k < k_end; k++)
+                            {
+                                C[(size_t)r * n + j] += A[(size_t)r * n + k] * B[(size_t)k * n + j];
+                            }
+                        }
+                    }
+                }
+
+                /* Leftover row when the tile height is odd (at most one). */
+                for (; i < i_end; i++)
+                {
+                    for (int j = bj; j < j_vec_end; j = j + 8)
+                    {
+                        __m256 acc = _mm256_setzero_ps();
+                        for (int k = bk; k < k_end; k++)
+                        {
+                            acc = _mm256_fmadd_ps(_mm256_set1_ps(A[(size_t)i * n + k]),
+                                                  _mm256_loadu_ps(&B[(size_t)k * n + j]),
+                                                  acc);
+                        }
+                        acc = _mm256_add_ps(acc, _mm256_loadu_ps(&C[(size_t)i * n + j]));
+                        _mm256_storeu_ps(&C[(size_t)i * n + j], acc);
                     }
                     for (int j = j_vec_end; j < j_end; j++)
                     {
