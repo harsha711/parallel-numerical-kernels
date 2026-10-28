@@ -1,0 +1,23 @@
+# Build products
+*.o
+gmon.out
+__pycache__/
+
+# Binaries
+gemm/gemm_naive
+gemm/gemm_tiled
+gemm/gemm_omp
+gemm/gemm_simd
+gemm/gemm_mpi
+gemm/stream
+spmv-mpi/spmv_csr
+spmv-mpi/spmv_mpi_allgather
+spmv-mpi/spmv_mpi_sparse
+spmv-node/spmv_csr
+spmv-node/spmv_omp_csr
+spmv-node/spmv_omp_ell
+spmv-node/spmv_simd_csr
+spmv-node/spmv_simd_ell
+
+# Downloaded SuiteSparse matrices
+matrices/

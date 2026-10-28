@@ -1,0 +1,6 @@
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+	Performing 192 iterations
+	benchmarking CSR-SpMV:  14.9978 ms (  0.74 GFLOP/s   5.5 GB/s)

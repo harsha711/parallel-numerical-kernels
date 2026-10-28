@@ -1,0 +1,9 @@
+UTC start: 2026-09-22 02:50:23
+hostname: c57
+Slurm job: 286330
+allocated CPUs: 16
+compiler: gcc (GCC) 12.4.0
+a52bae5e175bea3f7832112af9c085adab47117f7d2ce219165379849231692b  benchmarks/stream.c
+compile flags: -O3 -fopenmp -march=native -DSTREAM_ARRAY_SIZE=80000000 -DNTIMES=20
+OpenMP: NUM_THREADS=16 DYNAMIC=FALSE PROC_BIND=close PLACES=cores
+UTC finish: 2026-09-22 02:50:26

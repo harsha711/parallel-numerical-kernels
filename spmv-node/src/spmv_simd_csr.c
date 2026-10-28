@@ -31,6 +31,26 @@ typedef struct spmv_ctx
     spmv_stats         stats;
 } spmv_ctx;
 
+static inline float csr_row_simd(const csr_matrix * A, const float * x, int i)
+{
+    int k = A->row_ptr[i], end = A->row_ptr[i + 1];
+    __m256 acc = _mm256_setzero_ps();
+    for (; k + 7 < end; k += 8) {
+        __m256 v = _mm256_loadu_ps(A->vals + k);
+        __m256i col = _mm256_loadu_si256((const __m256i*)(A->col_idx + k));
+        __m256 xv = _mm256_i32gather_ps(x, col, 4);
+        acc = _mm256_fmadd_ps(v, xv, acc);
+    }
+
+    /* Reducing eight partial sums changes the scalar summation order. */
+    float lanes[8];
+    _mm256_storeu_ps(lanes, acc);
+    float sum = 0.0f;
+    for (int lane = 0; lane < 8; lane++) sum += lanes[lane];
+    for (; k < end; k++) sum += A->vals[k] * x[A->col_idx[k]];
+    return sum;
+}
+
 
 int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
 {
@@ -44,9 +64,18 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
     c->start = (int*)alloc_array(c->nthreads + 1, sizeof(int));
     if (!c->start) { free(c); return 1; }
 
-    /* TODO (Task 3b): the nonzero-based row split, as in spmv_omp_csr.c. */
-    for (int t = 0; t <= c->nthreads; t++)
-        c->start[t] = (t == 0) ? 0 : A->num_rows;
+    c->start[0] = 0;
+    c->start[c->nthreads] = A->num_rows;
+    for (int t = 1; t < c->nthreads; t++) {
+        long long target = (long long)t * A->num_nonzeros / c->nthreads;
+        int lo = 0, hi = A->num_rows;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (A->row_ptr[mid] < target) lo = mid + 1;
+            else hi = mid;
+        }
+        c->start[t] = lo;
+    }
 
     *ctx = c;
     return 0;
@@ -60,22 +89,34 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
     memset(c->stats.rows, 0, sizeof c->stats.rows);
     memset(c->stats.work, 0, sizeof c->stats.work);
 
-    /* TODO (Task 4): vectorise along each row, threaded as in spmv_omp_csr.c.
-     *
-     * For row i over k in [row_ptr[i], row_ptr[i+1]), eight nonzeros at a time:
-     *   v   = _mm256_loadu_ps(&vals[k])
-     *   col = _mm256_loadu_si256(&col_idx[k])
-     *   xv  = _mm256_i32gather_ps(x, col, 4)
-     *   acc = _mm256_fmadd_ps(v, xv, acc)
-     * then reduce acc's eight lanes to one float and add the len % 8 tail
-     * scalar.
-     *
-     * The lane reduction changes the order in which the row is summed, so a
-     * small nonzero relative error against the baseline is expected here. */
-    for (int i = 0; i < A->num_rows; i++)
-        y[i] = 0.0f;
-
-    (void)x;
+    if (c->partition == SPMV_PART_ROW) {
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0, work = 0;
+            #pragma omp for schedule(runtime)
+            for (int i = 0; i < A->num_rows; i++) {
+                y[i] = csr_row_simd(A, x, i);
+                rows++;
+                work += A->row_ptr[i + 1] - A->row_ptr[i];
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = work;
+        }
+    } else {
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0, work = 0;
+            for (int i = c->start[tid]; i < c->start[tid + 1]; i++) {
+                y[i] = csr_row_simd(A, x, i);
+                rows++;
+                work += A->row_ptr[i + 1] - A->row_ptr[i];
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = work;
+        }
+    }
 }
 
 

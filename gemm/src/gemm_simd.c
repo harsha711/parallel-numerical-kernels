@@ -115,7 +115,7 @@ void gemm(int n, const float *A, const float *B, float *C,
 {
     int b = opts->tile > 0 ? opts->tile : 64;
 
-#pragma omp parallel for collapse(2) schedule(dynamic)
+#pragma omp parallel for collapse(2) schedule(static)
     for (int bi = 0; bi < n; bi = bi + b)
     {
         for (int bj = 0; bj < n; bj = bj + b)

@@ -1,0 +1,13 @@
+UTC start: 2026-09-22 02:15:58
+hostname: c57
+Slurm job: 286323
+Slurm node list: c57
+allocated CPUs: 16
+compiler: gcc (GCC) 12.4.0
+Git revision: 3db8dde
+OpenMP: DYNAMIC=FALSE PROC_BIND=close PLACES=cores
+a2d100483312c5b9574f6d9d5f796bcbe66a4039477a2b5c864bcf35765ec85f  src/spmv_omp_csr.c
+059931f1eebaa7e13dfe083175dc8d473979c869b65add8ebef8e7b374269566  src/spmv_omp_ell.c
+c99acab00bc456a35fcf8b1270e2fba1528d94d6fcac21112a2b878dd41415af  src/spmv_simd_csr.c
+a64d04867bf69059e3e165fbd21d768ae65ccd0d30d1deb9a7042d55e093b028  src/spmv_simd_ell.c
+UTC finish: 2026-09-22 02:35:03

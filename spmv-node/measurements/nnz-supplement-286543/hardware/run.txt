@@ -1,0 +1,8 @@
+UTC start: 2026-09-22 19:19:16
+hostname: c20
+Slurm job: 286543
+allocated CPUs: 16
+OpenMP: DYNAMIC=FALSE PROC_BIND=close PLACES=cores
+a2d100483312c5b9574f6d9d5f796bcbe66a4039477a2b5c864bcf35765ec85f  src/spmv_omp_csr.c
+059931f1eebaa7e13dfe083175dc8d473979c869b65add8ebef8e7b374269566  src/spmv_omp_ell.c
+UTC finish: 2026-09-22 19:19:40

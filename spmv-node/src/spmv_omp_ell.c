@@ -65,13 +65,20 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
     c->start = (int*)alloc_array(c->nthreads + 1, sizeof(int));
     if (!c->start) { delete_ell_matrix(&c->ell); free(c); return 1; }
 
-    /* TODO (Task 3b): as in spmv_omp_csr.c, split the rows so that each thread
-     * gets about the same amount of work. Note what "work" means here: every
-     * row costs exactly K slots, so an ELL row range is balanced by ROW COUNT
-     * and a nonzero-based split buys you much less than it does for CSR. Say
-     * so in the report, with numbers. */
-    for (int t = 0; t <= c->nthreads; t++)
-        c->start[t] = (t == 0) ? 0 : A->num_rows;
+    /* Split by true CSR nonzeros for comparison with row partitioning.
+     * ELL still touches K slots per row, so this need not balance ELL work. */
+    c->start[0] = 0;
+    c->start[c->nthreads] = A->num_rows;
+    for (int t = 1; t < c->nthreads; t++) {
+        long long target = (long long)t * A->num_nonzeros / c->nthreads;
+        int lo = 0, hi = A->num_rows;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (A->row_ptr[mid] < target) lo = mid + 1;
+            else hi = mid;
+        }
+        c->start[t] = lo;
+    }
 
     *ctx = c;
     return 0;
@@ -106,10 +113,24 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
             c->stats.work[tid] = rows * K;
         }
     } else {
-        /* Task 3 will add fixed row ranges for nonzero partitioning. */
-        ell_spmv(&c->ell, x, y);
-        c->stats.rows[0] = A->num_rows;
-        c->stats.work[0] = (long long)A->num_rows * c->ell.max_row_len;
+        const int m = c->ell.num_rows;
+        const int K = c->ell.max_row_len;
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0;
+            for (int i = c->start[tid]; i < c->start[tid + 1]; i++) {
+                float sum = 0.0f;
+                for (int k = 0; k < K; k++) {
+                    size_t slot = (size_t)k * (size_t)m + (size_t)i;
+                    sum += c->ell.vals[slot] * x[c->ell.col_idx[slot]];
+                }
+                y[i] = sum;
+                rows++;
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = rows * K;
+        }
     }
 }
 

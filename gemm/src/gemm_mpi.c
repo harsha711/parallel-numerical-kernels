@@ -35,64 +35,113 @@
 typedef struct summa_ctx
 {
     summa_grid grid;
-    gemm_opts  opts;      //gemm_mpi() does not receive opts; keep a copy
+    gemm_opts opts; // gemm_mpi() does not receive opts; keep a copy
 
-    MPI_Comm   row_comm;  //the p ranks in my grid row
-    MPI_Comm   col_comm;  //the p ranks in my grid column
+    MPI_Comm row_comm; // the p ranks in my grid row
+    MPI_Comm col_comm; // the p ranks in my grid column
 
-    float    * A_buf;     //the A_ik panel for the current step
-    float    * B_buf;     //the B_kj panel for the current step
+    float *A_buf; // the A_ik panel for the current step
+    float *B_buf; // the B_kj panel for the current step
 
-    summa_stats stats;    //filled in for 2b, reset every call
+    summa_stats stats; // filled in for 2b, reset every call
 } summa_ctx;
 
-
-int gemm_mpi_setup(const summa_grid * g, const gemm_opts * opts,
-                   MPI_Comm comm, void ** ctx)
+int gemm_mpi_setup(const summa_grid *g, const gemm_opts *opts,
+                   MPI_Comm comm, void **ctx)
 {
-    summa_ctx * c = (summa_ctx*)calloc(1, sizeof(summa_ctx));
-    if (!c) return 1;
+    /* The splits are collective: every rank must reach them, so they come
+     * before any early return. A rank that bailed out first would leave the
+     * others blocked here while it waits in the harness's next collective. */
+    MPI_Comm row_comm = MPI_COMM_NULL, col_comm = MPI_COMM_NULL;
+    int rc_row = MPI_Comm_split(comm, g->row, g->col, &row_comm);
+    int rc_col = MPI_Comm_split(comm, g->col, g->row, &col_comm);
+
+    size_t bytes = (size_t)g->b * g->b * sizeof(float);
+    summa_ctx *c = (summa_ctx *)calloc(1, sizeof(summa_ctx));
+    float *A_buf = (float *)malloc(bytes);
+    float *B_buf = (float *)malloc(bytes);
+
+    if (rc_row != MPI_SUCCESS || rc_col != MPI_SUCCESS || !c || !A_buf || !B_buf)
+    {
+        if (row_comm != MPI_COMM_NULL)
+            MPI_Comm_free(&row_comm);
+        if (col_comm != MPI_COMM_NULL)
+            MPI_Comm_free(&col_comm);
+        free(A_buf);
+        free(B_buf);
+        free(c);
+        return 1;
+    }
+
     c->grid = *g;
     c->opts = *opts;
-
-    /* TODO: split `comm` into row and column communicators (MPI_Comm_split
-     * with g->row / g->col as the colour, or MPI_Cart_create + MPI_Cart_sub),
-     * and allocate the two b x b receive buffers. Nothing after this point
-     * should allocate. */
-    (void)comm;
+    c->row_comm = row_comm;
+    c->col_comm = col_comm;
+    c->A_buf = A_buf;
+    c->B_buf = B_buf;
 
     *ctx = c;
     return 0;
 }
 
-
-void gemm_mpi(void * ctx, const float * A_ij, const float * B_ij, float * C_ij,
+void gemm_mpi(void *ctx, const float *A_ij, const float *B_ij, float *C_ij,
               MPI_Comm comm)
 {
-    summa_ctx * c = (summa_ctx*)ctx;
+    summa_ctx *c = (summa_ctx *)ctx;
     memset(&c->stats, 0, sizeof c->stats);
 
-    /* TODO: the p steps. At step k, the A panel comes from grid column k of my
-     * row and the B panel from grid row k of my column; when that is me, the
-     * panel is my own block. Wrap the communication in MPI_Wtime() and add it
-     * to c->stats.comm_seconds; count the messages and bytes this rank SENDS
-     * under the model your report states. Then gemm() the two panels into
-     * C_ij. */
-    (void)A_ij; (void)B_ij; (void)C_ij; (void)comm;
+    int p = c->grid.p;
+    int b = c->grid.b;
+    int row = c->grid.row;
+    int col = c->grid.col;
+    int count = b * b;
+    long long block_bytes = (long long)count * (long long)sizeof(float);
+
+    for (int k = 0; k < p; k++)
+    {
+        /* The owner broadcasts its own block; everyone else receives into the
+         * panel buffer. MPI_Bcast does not modify the root's buffer, so the
+         * const cast is safe. */
+        float *a = (col == k) ? (float *)A_ij : c->A_buf;
+        float *bp = (row == k) ? (float *)B_ij : c->B_buf;
+
+        double t0 = MPI_Wtime();
+        MPI_Bcast(a, count, MPI_FLOAT, k, c->row_comm);
+        MPI_Bcast(bp, count, MPI_FLOAT, k, c->col_comm);
+        c->stats.comm_seconds += MPI_Wtime() - t0;
+
+        /* Cost model: a broadcast to p ranks is p-1 point-to-point messages,
+         * all charged to the root; receivers send nothing. */
+        if (col == k)
+        {
+            c->stats.messages += p - 1;
+            c->stats.bytes_sent += (long long)(p - 1) * block_bytes;
+        }
+        if (row == k)
+        {
+            c->stats.messages += p - 1;
+            c->stats.bytes_sent += (long long)(p - 1) * block_bytes;
+        }
+
+        gemm(b, a, bp, C_ij, &c->opts);
+    }
+    (void)comm;
 }
 
-
-void gemm_mpi_stats(void * ctx, summa_stats * out)
+void gemm_mpi_stats(void *ctx, summa_stats *out)
 {
-    summa_ctx * c = (summa_ctx*)ctx;
+    summa_ctx *c = (summa_ctx *)ctx;
     *out = c->stats;
 }
 
-
-void gemm_mpi_teardown(void * ctx)
+void gemm_mpi_teardown(void *ctx)
 {
-    summa_ctx * c = (summa_ctx*)ctx;
-    if (!c) return;
-    /* TODO: MPI_Comm_free the two communicators, free the two buffers. */
+    summa_ctx *c = (summa_ctx *)ctx;
+    if (!c)
+        return;
+    MPI_Comm_free(&c->row_comm);
+    MPI_Comm_free(&c->col_comm);
+    free(c->A_buf);
+    free(c->B_buf);
     free(c);
 }

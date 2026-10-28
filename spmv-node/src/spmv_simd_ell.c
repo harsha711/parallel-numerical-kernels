@@ -30,6 +30,33 @@ typedef struct spmv_ctx
     spmv_stats     stats;
 } spmv_ctx;
 
+static inline void ell_rows_simd(const ell_matrix * ell, const float * x,
+                                 float * y, int begin, int end)
+{
+    const size_t m = (size_t)ell->num_rows;
+    const int K = ell->max_row_len;
+    int i = begin;
+    for (; i + 7 < end; i += 8) {
+        __m256 acc = _mm256_setzero_ps();
+        for (int k = 0; k < K; k++) {
+            size_t slot = (size_t)k * m + (size_t)i;
+            __m256 v = _mm256_loadu_ps(ell->vals + slot);
+            __m256i col = _mm256_loadu_si256((const __m256i*)(ell->col_idx + slot));
+            __m256 xv = _mm256_i32gather_ps(x, col, 4);
+            acc = _mm256_fmadd_ps(v, xv, acc);
+        }
+        _mm256_storeu_ps(y + i, acc);
+    }
+    for (; i < end; i++) {
+        float sum = 0.0f;
+        for (int k = 0; k < K; k++) {
+            size_t slot = (size_t)k * m + (size_t)i;
+            sum += ell->vals[slot] * x[ell->col_idx[slot]];
+        }
+        y[i] = sum;
+    }
+}
+
 
 int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
 {
@@ -67,8 +94,18 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
 
     c->start = (int*)alloc_array(c->nthreads + 1, sizeof(int));
     if (!c->start) { delete_ell_matrix(&c->ell); free(c); return 1; }
-    for (int t = 0; t <= c->nthreads; t++)
-        c->start[t] = (t == 0) ? 0 : A->num_rows;
+    c->start[0] = 0;
+    c->start[c->nthreads] = A->num_rows;
+    for (int t = 1; t < c->nthreads; t++) {
+        long long target = (long long)t * A->num_nonzeros / c->nthreads;
+        int lo = 0, hi = A->num_rows;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (A->row_ptr[mid] < target) lo = mid + 1;
+            else hi = mid;
+        }
+        c->start[t] = lo;
+    }
 
     *ctx = c;
     return 0;
@@ -82,30 +119,32 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
     memset(c->stats.rows, 0, sizeof c->stats.rows);
     memset(c->stats.work, 0, sizeof c->stats.work);
 
-    /* TODO (Task 4): eight rows per vector, over the same OpenMP threading as
-     * spmv_omp_ell.c.
-     *
-     * For a block of eight rows starting at i, with m = num_rows:
-     *   acc = _mm256_setzero_ps()
-     *   for k in [0, K):
-     *     v   = _mm256_loadu_ps(&vals[k*m + i])          eight values
-     *     col = _mm256_loadu_si256(&col_idx[k*m + i])    eight columns
-     *     xv  = _mm256_i32gather_ps(x, col, 4)           eight x entries
-     *     acc = _mm256_fmadd_ps(v, xv, acc)
-     *   _mm256_storeu_ps(&y[i], acc)
-     *
-     * The rows do not divide by eight in general, so finish the last
-     * num_rows % 8 rows scalar, or mask them.
-     *
-     * Note the accumulation order: the eight lanes are independent partial
-     * sums, and each y[i] here is summed over k in the same order as the
-     * scalar version, so this one stays close to the baseline. Where a SIMD
-     * kernel reorders a single row's sum -- as the CSR version must -- expect
-     * a small nonzero relative error. That is rounding, not a bug. */
-    /* Scalar reference path while the Task 4 vector kernel is pending. */
-    ell_spmv(&c->ell, x, y);
-    c->stats.rows[0] = A->num_rows;
-    c->stats.work[0] = (long long)A->num_rows * c->ell.max_row_len;
+    if (c->partition == SPMV_PART_ROW) {
+        int blocks = (A->num_rows + 7) / 8;
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0;
+            #pragma omp for schedule(runtime)
+            for (int b = 0; b < blocks; b++) {
+                int begin = b * 8;
+                int end = begin + 8 < A->num_rows ? begin + 8 : A->num_rows;
+                ell_rows_simd(&c->ell, x, y, begin, end);
+                rows += end - begin;
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = rows * c->ell.max_row_len;
+        }
+    } else {
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            int begin = c->start[tid], end = c->start[tid + 1];
+            ell_rows_simd(&c->ell, x, y, begin, end);
+            c->stats.rows[tid] = end - begin;
+            c->stats.work[tid] = (long long)(end - begin) * c->ell.max_row_len;
+        }
+    }
 }
 
 

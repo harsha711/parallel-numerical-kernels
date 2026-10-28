@@ -1,0 +1,660 @@
+=== Matrix: D6-6 | Ranks: 1 (Allgather) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=1
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 146880, min 146880, avg 146880 (imbalance 1.00x)
+setup: 0.0007 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1438 ms (  2.04 GFLOP/s  19.0 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: D6-6 | Ranks: 1 (Sparse) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=1
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 146880, min 146880, avg 146880 (imbalance 1.00x)
+setup: 0.0726 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1358 ms (  2.16 GFLOP/s  20.1 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: dictionary28 | Ranks: 1 (Allgather) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=1
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 178076, min 178076, avg 178076 (imbalance 1.00x)
+setup: 0.0006 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.4518 ms (  0.79 GFLOP/s   5.7 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: dictionary28 | Ranks: 1 (Sparse) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=1
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 178076, min 178076, avg 178076 (imbalance 1.00x)
+setup: 0.2946 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.4451 ms (  0.80 GFLOP/s   5.7 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: bfly | Ranks: 1 (Allgather) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=1
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 196608, min 196608, avg 196608 (imbalance 1.00x)
+setup: 0.0007 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1103 ms (  3.57 GFLOP/s  25.0 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: bfly | Ranks: 1 (Sparse) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=1
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 196608, min 196608, avg 196608 (imbalance 1.00x)
+setup: 0.1238 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0982 ms (  4.00 GFLOP/s  28.0 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: Ga3As3H12 | Ranks: 1 (Allgather) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=1
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 5970947, min 5970947, avg 5970947 (imbalance 1.00x)
+setup: 0.0097 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   2.5476 ms (  4.69 GFLOP/s  28.3 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: Ga3As3H12 | Ranks: 1 (Sparse) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=1
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 5970947, min 5970947, avg 5970947 (imbalance 1.00x)
+setup: 1.5790 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   2.5408 ms (  4.70 GFLOP/s  28.4 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: pkustk14 | Ranks: 1 (Allgather) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=1
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 14836504, min 14836504, avg 14836504 (imbalance 1.00x)
+setup: 0.0032 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 563 iterations
+	benchmarking CSR-SpMV (MPI):   5.3141 ms (  5.58 GFLOP/s  33.7 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: pkustk14 | Ranks: 1 (Sparse) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=1
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 14836504, min 14836504, avg 14836504 (imbalance 1.00x)
+setup: 3.8702 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 540 iterations
+	benchmarking CSR-SpMV (MPI):   5.2961 ms (  5.60 GFLOP/s  33.8 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: roadNet-CA | Ranks: 1 (Allgather) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=1
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 5533214, min 5533214, avg 5533214 (imbalance 1.00x)
+setup: 0.0044 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 271 iterations
+	benchmarking CSR-SpMV (MPI):  10.0946 ms (  1.10 GFLOP/s   8.1 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: roadNet-CA | Ranks: 1 (Sparse) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=1
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 5533214, min 5533214, avg 5533214 (imbalance 1.00x)
+setup: 4.7256 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 286 iterations
+	benchmarking CSR-SpMV (MPI):   9.8499 ms (  1.12 GFLOP/s   8.3 GB/s)
+communication per SpMV, summed over ranks: 0 messages, 0.000 MB
+=== Matrix: D6-6 | Ranks: 2 (Allgather) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=2
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 130488, min 16392, avg 73440 (imbalance 1.78x)
+setup: 0.0036 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2238 ms (  1.31 GFLOP/s  12.2 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.095 MB
+=== Matrix: D6-6 | Ranks: 2 (Sparse) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=2
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 130488, min 16392, avg 73440 (imbalance 1.78x)
+setup: 0.2130 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2322 ms (  1.27 GFLOP/s  11.7 GB/s)
+communication per SpMV, summed over ranks: 1 messages, 0.046 MB
+=== Matrix: dictionary28 | Ranks: 2 (Allgather) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=2
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 136235, min 41841, avg 89038 (imbalance 1.53x)
+setup: 0.0034 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2899 ms (  1.23 GFLOP/s   8.8 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.211 MB
+=== Matrix: dictionary28 | Ranks: 2 (Sparse) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=2
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 136235, min 41841, avg 89038 (imbalance 1.53x)
+setup: 2.4283 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2896 ms (  1.23 GFLOP/s   8.8 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.047 MB
+=== Matrix: bfly | Ranks: 2 (Allgather) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=2
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 98304, min 98304, avg 98304 (imbalance 1.00x)
+setup: 0.0033 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1404 ms (  2.80 GFLOP/s  19.6 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.197 MB
+=== Matrix: bfly | Ranks: 2 (Sparse) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=2
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 98304, min 98304, avg 98304 (imbalance 1.00x)
+setup: 2.2627 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1374 ms (  2.86 GFLOP/s  20.0 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.033 MB
+=== Matrix: Ga3As3H12 | Ranks: 2 (Allgather) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=2
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 3020372, min 2950575, avg 2985474 (imbalance 1.01x)
+setup: 0.0052 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   3.4117 ms (  3.50 GFLOP/s  21.1 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.245 MB
+=== Matrix: Ga3As3H12 | Ranks: 2 (Sparse) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=2
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 3020372, min 2950575, avg 2985474 (imbalance 1.01x)
+setup: 4.3043 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   3.4259 ms (  3.49 GFLOP/s  21.1 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.090 MB
+=== Matrix: pkustk14 | Ranks: 2 (Allgather) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=2
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 8929635, min 5906869, avg 7418252 (imbalance 1.20x)
+setup: 0.0049 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 479 iterations
+	benchmarking CSR-SpMV (MPI):   6.2675 ms (  4.73 GFLOP/s  28.6 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.608 MB
+=== Matrix: pkustk14 | Ranks: 2 (Sparse) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=2
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 8929635, min 5906869, avg 7418252 (imbalance 1.20x)
+setup: 7.1005 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 482 iterations
+	benchmarking CSR-SpMV (MPI):   6.2480 ms (  4.75 GFLOP/s  28.7 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.061 MB
+=== Matrix: roadNet-CA | Ranks: 2 (Allgather) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=2
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 2788595, min 2744619, avg 2766607 (imbalance 1.01x)
+setup: 0.0065 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 329 iterations
+	benchmarking CSR-SpMV (MPI):   8.3042 ms (  1.33 GFLOP/s   9.9 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 7.885 MB
+=== Matrix: roadNet-CA | Ranks: 2 (Sparse) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=2
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 2788595, min 2744619, avg 2766607 (imbalance 1.01x)
+setup: 11.3263 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 320 iterations
+	benchmarking CSR-SpMV (MPI):   9.2533 ms (  1.20 GFLOP/s   8.9 GB/s)
+communication per SpMV, summed over ranks: 2 messages, 0.061 MB
+=== Matrix: D6-6 | Ranks: 4 (Allgather) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=4
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 70002, min 6048, avg 36720 (imbalance 1.91x)
+setup: 0.0047 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2086 ms (  1.41 GFLOP/s  13.1 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 0.285 MB
+=== Matrix: D6-6 | Ranks: 4 (Sparse) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=4
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 70002, min 6048, avg 36720 (imbalance 1.91x)
+setup: 4.8208 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2017 ms (  1.46 GFLOP/s  13.5 GB/s)
+communication per SpMV, summed over ranks: 7 messages, 0.096 MB
+=== Matrix: dictionary28 | Ranks: 4 (Allgather) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=4
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 83226, min 13959, avg 44519 (imbalance 1.87x)
+setup: 0.0037 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.2186 ms (  1.63 GFLOP/s  11.7 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 0.632 MB
+=== Matrix: dictionary28 | Ranks: 4 (Sparse) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=4
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 83226, min 13959, avg 44519 (imbalance 1.87x)
+setup: 5.5294 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1964 ms (  1.81 GFLOP/s  13.0 GB/s)
+communication per SpMV, summed over ranks: 10 messages, 0.117 MB
+=== Matrix: bfly | Ranks: 4 (Allgather) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=4
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 49152, min 49152, avg 49152 (imbalance 1.00x)
+setup: 0.0039 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0805 ms (  4.89 GFLOP/s  34.2 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 0.590 MB
+=== Matrix: bfly | Ranks: 4 (Sparse) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=4
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 49152, min 49152, avg 49152 (imbalance 1.00x)
+setup: 4.5897 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0617 ms (  6.38 GFLOP/s  44.6 GB/s)
+communication per SpMV, summed over ranks: 8 messages, 0.066 MB
+=== Matrix: Ga3As3H12 | Ranks: 4 (Allgather) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=4
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 2241598, min 778774, avg 1492737 (imbalance 1.50x)
+setup: 0.0041 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   2.0376 ms (  5.86 GFLOP/s  35.4 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 0.736 MB
+=== Matrix: Ga3As3H12 | Ranks: 4 (Sparse) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=4
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 2241598, min 778774, avg 1492737 (imbalance 1.50x)
+setup: 8.8751 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   2.0266 ms (  5.89 GFLOP/s  35.6 GB/s)
+communication per SpMV, summed over ranks: 8 messages, 0.241 MB
+=== Matrix: pkustk14 | Ranks: 4 (Allgather) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=4
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 5108816, min 2829221, avg 3709126 (imbalance 1.38x)
+setup: 0.0055 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 681 iterations
+	benchmarking CSR-SpMV (MPI):   4.4078 ms (  6.73 GFLOP/s  40.7 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 1.823 MB
+=== Matrix: pkustk14 | Ranks: 4 (Sparse) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=4
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 5108816, min 2829221, avg 3709126 (imbalance 1.38x)
+setup: 9.1883 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 699 iterations
+	benchmarking CSR-SpMV (MPI):   4.3087 ms (  6.89 GFLOP/s  41.6 GB/s)
+communication per SpMV, summed over ranks: 10 messages, 0.140 MB
+=== Matrix: roadNet-CA | Ranks: 4 (Allgather) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=4
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 1397036, min 1364290, avg 1383304 (imbalance 1.01x)
+setup: 0.1169 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 566 iterations
+	benchmarking CSR-SpMV (MPI):   4.7945 ms (  2.31 GFLOP/s  17.1 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 23.655 MB
+=== Matrix: roadNet-CA | Ranks: 4 (Sparse) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=4
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 1397036, min 1364290, avg 1383304 (imbalance 1.01x)
+setup: 13.6423 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 775 iterations
+	benchmarking CSR-SpMV (MPI):   3.7229 ms (  2.97 GFLOP/s  22.1 GB/s)
+communication per SpMV, summed over ranks: 12 messages, 0.081 MB
+=== Matrix: D6-6 | Ranks: 8 (Allgather) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=8
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 35046, min 3024, avg 18360 (imbalance 1.91x)
+setup: 0.0051 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1207 ms (  2.43 GFLOP/s  22.6 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 0.665 MB
+=== Matrix: D6-6 | Ranks: 8 (Sparse) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=8
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 35046, min 3024, avg 18360 (imbalance 1.91x)
+setup: 8.5733 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1125 ms (  2.61 GFLOP/s  24.2 GB/s)
+communication per SpMV, summed over ranks: 27 messages, 0.138 MB
+=== Matrix: dictionary28 | Ranks: 8 (Allgather) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=8
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 51421, min 6435, avg 22260 (imbalance 2.31x)
+setup: 0.0059 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.1177 ms (  3.03 GFLOP/s  21.7 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 1.474 MB
+=== Matrix: dictionary28 | Ranks: 8 (Sparse) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=8
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 51421, min 6435, avg 22260 (imbalance 2.31x)
+setup: 7.6656 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0958 ms (  3.72 GFLOP/s  26.7 GB/s)
+communication per SpMV, summed over ranks: 40 messages, 0.172 MB
+=== Matrix: bfly | Ranks: 8 (Allgather) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=8
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 24576, min 24576, avg 24576 (imbalance 1.00x)
+setup: 0.0056 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0752 ms (  5.23 GFLOP/s  36.6 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 1.376 MB
+=== Matrix: bfly | Ranks: 8 (Sparse) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=8
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 24576, min 24576, avg 24576 (imbalance 1.00x)
+setup: 5.7548 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0395 ms (  9.95 GFLOP/s  69.7 GB/s)
+communication per SpMV, summed over ranks: 24 messages, 0.098 MB
+=== Matrix: Ga3As3H12 | Ranks: 8 (Allgather) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=8
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 1224095, min 249006, avg 746368 (imbalance 1.64x)
+setup: 0.0065 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   1.1157 ms ( 10.70 GFLOP/s  64.7 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 1.718 MB
+=== Matrix: Ga3As3H12 | Ranks: 8 (Sparse) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=8
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 1224095, min 249006, avg 746368 (imbalance 1.64x)
+setup: 10.2804 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   1.1118 ms ( 10.74 GFLOP/s  64.9 GB/s)
+communication per SpMV, summed over ranks: 32 messages, 0.522 MB
+=== Matrix: pkustk14 | Ranks: 8 (Allgather) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=8
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 2673639, min 1355550, avg 1854563 (imbalance 1.44x)
+setup: 0.0104 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   2.4249 ms ( 12.24 GFLOP/s  73.9 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 4.254 MB
+=== Matrix: pkustk14 | Ranks: 8 (Sparse) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=8
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 2673639, min 1355550, avg 1854563 (imbalance 1.44x)
+setup: 10.5499 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   2.3228 ms ( 12.77 GFLOP/s  77.2 GB/s)
+communication per SpMV, summed over ranks: 34 messages, 0.235 MB
+=== Matrix: roadNet-CA | Ranks: 8 (Allgather) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=8
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 724199, min 672837, avg 691652 (imbalance 1.05x)
+setup: 0.0150 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 754 iterations
+	benchmarking CSR-SpMV (MPI):   3.6385 ms (  3.04 GFLOP/s  22.6 GB/s)
+communication per SpMV, summed over ranks: 56 messages, 55.196 MB
+=== Matrix: roadNet-CA | Ranks: 8 (Sparse) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=8
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 724199, min 672837, avg 691652 (imbalance 1.05x)
+setup: 12.5168 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   1.8450 ms (  6.00 GFLOP/s  44.5 GB/s)
+communication per SpMV, summed over ranks: 54 messages, 0.139 MB
+=== Matrix: D6-6 | Ranks: 16 (Allgather) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=16
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 17582, min 1494, avg 9180 (imbalance 1.92x)
+setup: 0.0064 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0515 ms (  5.71 GFLOP/s  53.0 GB/s)
+communication per SpMV, summed over ranks: 240 messages, 1.424 MB
+=== Matrix: D6-6 | Ranks: 16 (Sparse) ===
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880 ranks=16
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+partition: nnz/rank max 17582, min 1494, avg 9180 (imbalance 1.92x)
+setup: 11.9852 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0332 ms (  8.85 GFLOP/s  82.1 GB/s)
+communication per SpMV, summed over ranks: 96 messages, 0.172 MB
+=== Matrix: dictionary28 | Ranks: 16 (Allgather) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=16
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 32138, min 2795, avg 11130 (imbalance 2.89x)
+setup: 0.0066 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0708 ms (  5.03 GFLOP/s  36.1 GB/s)
+communication per SpMV, summed over ranks: 240 messages, 3.159 MB
+=== Matrix: dictionary28 | Ranks: 16 (Sparse) ===
+Reading sparse matrix from file (matrices/dictionary28.mtx): done
+
+file=matrices/dictionary28.mtx rows=52652 cols=52652 nonzeros=178076 ranks=16
+storage: COO 2.14 MB, CSR 1.64 MB (CSR/COO = 0.765)
+partition: nnz/rank max 32138, min 2795, avg 11130 (imbalance 2.89x)
+setup: 11.2833 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0293 ms ( 12.15 GFLOP/s  87.3 GB/s)
+communication per SpMV, summed over ranks: 162 messages, 0.217 MB
+=== Matrix: bfly | Ranks: 16 (Allgather) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=16
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 12288, min 12288, avg 12288 (imbalance 1.00x)
+setup: 0.0058 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0621 ms (  6.33 GFLOP/s  44.3 GB/s)
+communication per SpMV, summed over ranks: 240 messages, 2.949 MB
+=== Matrix: bfly | Ranks: 16 (Sparse) ===
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608 ranks=16
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+partition: nnz/rank max 12288, min 12288, avg 12288 (imbalance 1.00x)
+setup: 8.0002 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.0197 ms ( 20.01 GFLOP/s 140.1 GB/s)
+communication per SpMV, summed over ranks: 64 messages, 0.131 MB
+=== Matrix: Ga3As3H12 | Ranks: 16 (Allgather) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=16
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 634793, min 111603, avg 373184 (imbalance 1.70x)
+setup: 0.0061 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.6380 ms ( 18.72 GFLOP/s 113.1 GB/s)
+communication per SpMV, summed over ranks: 240 messages, 3.681 MB
+=== Matrix: Ga3As3H12 | Ranks: 16 (Sparse) ===
+Reading sparse matrix from file (matrices/Ga3As3H12.mtx): done
+
+file=matrices/Ga3As3H12.mtx rows=61349 cols=61349 nonzeros=5970947 ranks=16
+storage: COO 71.65 MB, CSR 48.01 MB (CSR/COO = 0.670)
+partition: nnz/rank max 634793, min 111603, avg 373184 (imbalance 1.70x)
+setup: 11.7918 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.6307 ms ( 18.94 GFLOP/s 114.4 GB/s)
+communication per SpMV, summed over ranks: 110 messages, 1.067 MB
+=== Matrix: pkustk14 | Ranks: 16 (Allgather) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=16
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 1343537, min 677649, avg 927282 (imbalance 1.45x)
+setup: 0.0068 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   1.2365 ms ( 24.00 GFLOP/s 145.0 GB/s)
+communication per SpMV, summed over ranks: 240 messages, 9.116 MB
+=== Matrix: pkustk14 | Ranks: 16 (Sparse) ===
+Reading sparse matrix from file (matrices/pkustk14.mtx): done
+
+file=matrices/pkustk14.mtx rows=151926 cols=151926 nonzeros=14836504 ranks=16
+storage: COO 178.04 MB, CSR 119.30 MB (CSR/COO = 0.670)
+partition: nnz/rank max 1343537, min 677649, avg 927282 (imbalance 1.45x)
+setup: 16.1353 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   1.1460 ms ( 25.89 GFLOP/s 156.4 GB/s)
+communication per SpMV, summed over ranks: 88 messages, 0.367 MB
+=== Matrix: roadNet-CA | Ranks: 16 (Allgather) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=16
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 381866, min 334703, avg 345826 (imbalance 1.10x)
+setup: 0.0244 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   1.8076 ms (  6.12 GFLOP/s  45.5 GB/s)
+communication per SpMV, summed over ranks: 240 messages, 118.277 MB
+=== Matrix: roadNet-CA | Ranks: 16 (Sparse) ===
+Reading sparse matrix from file (matrices/roadNet-CA.mtx): done
+
+file=matrices/roadNet-CA.mtx rows=1971281 cols=1971281 nonzeros=5533214 ranks=16
+storage: COO 66.40 MB, CSR 52.15 MB (CSR/COO = 0.785)
+partition: nnz/rank max 381866, min 334703, avg 345826 (imbalance 1.10x)
+setup: 17.8105 ms
+correctness: PASS (relative L2 error 0.000e+00, max |diff| 0.000e+00, tolerance 1e-05)
+	Performing 800 iterations
+	benchmarking CSR-SpMV (MPI):   0.9351 ms ( 11.83 GFLOP/s  87.9 GB/s)
+communication per SpMV, summed over ranks: 178 messages, 0.339 MB

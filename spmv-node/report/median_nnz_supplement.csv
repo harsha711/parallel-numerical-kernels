@@ -1,0 +1,17 @@
+kernel,name,partition,sched_kind,sched_chunk,ms,imbalance,work_max
+spmv_omp_csr,D6-6,nnz,static,0,0.113524,1.0,18360.0
+spmv_omp_csr,D6-6,row,static,0,0.096733,1.9088,35046.0
+spmv_omp_csr,bfly,nnz,static,0,0.030463,1.0,24576.0
+spmv_omp_csr,bfly,row,static,0,0.031875,1.0,24576.0
+spmv_omp_csr,dictionary28,nnz,static,0,0.140435,1.0003,22267.0
+spmv_omp_csr,dictionary28,row,static,0,0.085484,2.3101,51421.0
+spmv_omp_csr,roadNet-CA,nnz,static,0,1.857194,1.0,691653.0
+spmv_omp_csr,roadNet-CA,row,static,0,1.887517,1.0471,724199.0
+spmv_omp_ell,D6-6,nnz,static,0,0.287199,4.3297,391542.0
+spmv_omp_ell,D6-6,row,static,0,0.059695,1.0,90432.0
+spmv_omp_ell,bfly,nnz,static,0,0.026944,1.0,24576.0
+spmv_omp_ell,bfly,row,static,0,0.028247,1.0,24576.0
+spmv_omp_ell,dictionary28,nnz,static,0,0.52838,2.8047,701442.0
+spmv_omp_ell,dictionary28,row,static,0,0.187445,1.0001,250116.0
+spmv_omp_ell,roadNet-CA,nnz,static,0,5.20934,1.03,3045648.0
+spmv_omp_ell,roadNet-CA,row,static,0,5.094892,1.0,2956932.0

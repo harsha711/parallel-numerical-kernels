@@ -1,0 +1,16 @@
+NodeName=c57 Arch=x86_64 CoresPerSocket=8 
+   CPUAlloc=16 CPUEfctv=16 CPUTot=16 CPULoad=0.04
+   AvailableFeatures=(null)
+   ActiveFeatures=(null)
+   Gres=(null)
+   NodeAddr=c57 NodeHostName=c57 Version=25.05.8
+   OS=Linux 5.19.9-1.el8.elrepo.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Sep 15 09:15:56 EDT 2022 
+   RealMemory=1 AllocMem=0 FreeMem=121860 Sockets=2 Boards=1
+   State=ALLOCATED ThreadsPerCore=1 TmpDisk=0 Weight=1 Owner=N/A MCS_label=N/A
+   Partitions=normal,max,all,class,csc549,rome,rtx4060ti8g 
+   BootTime=2026-07-28T21:43:36 SlurmdStartTime=2026-07-28T21:44:19
+   LastBusyTime=2026-09-21T21:24:32 ResumeAfterTime=None
+   CfgTRES=cpu=16,mem=1M,billing=16
+   AllocTRES=cpu=16,mem=1M,billing=16
+   CurrentWatts=0 AveWatts=0
+

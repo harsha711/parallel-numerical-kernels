@@ -53,16 +53,18 @@ int spmv_omp_setup(const csr_matrix * A, const spmv_opts * opts, void ** ctx)
     c->start = (int*)alloc_array(c->nthreads + 1, sizeof(int));
     if (!c->start) { free(c); return 1; }
 
-    /* TODO (Task 3b): fill start[] so each thread gets about the same number
-     * of NONZEROS rather than the same number of rows. Thread t should own the
-     * rows around the nonzero index t*nnz/nthreads -- a binary search of
-     * A->row_ptr finds the row boundary. Do not split a row between threads:
-     * keeping whole rows means each y[i] is still accumulated by one thread in
-     * one order, and no reduction is needed.
-     *
-     * The placeholder below hands every row to thread 0. */
-    for (int t = 0; t <= c->nthreads; t++)
-        c->start[t] = (t == 0) ? 0 : A->num_rows;
+    c->start[0] = 0;
+    c->start[c->nthreads] = A->num_rows;
+    for (int t = 1; t < c->nthreads; t++) {
+        long long target = (long long)t * A->num_nonzeros / c->nthreads;
+        int lo = 0, hi = A->num_rows;
+        while (lo < hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (A->row_ptr[mid] < target) lo = mid + 1;
+            else hi = mid;
+        }
+        c->start[t] = lo;
+    }
 
     *ctx = c;
     return 0;
@@ -95,11 +97,22 @@ void spmv_omp(void * ctx, const csr_matrix * A, const float * x, float * y)
             c->stats.work[tid] = work;
         }
     } else {
-        /* TODO (Task 3b): same kernel, but each thread walks its own row range
-         * [c->start[t], c->start[t+1]) from setup -- one fixed range per
-         * thread, so no schedule applies here. */
-        for (int i = 0; i < A->num_rows; i++)
-            y[i] = 0.0f;
+        #pragma omp parallel
+        {
+            int tid = omp_get_thread_num();
+            long long rows = 0, work = 0;
+            for (int i = c->start[tid]; i < c->start[tid + 1]; i++) {
+                int begin = A->row_ptr[i], end = A->row_ptr[i + 1];
+                float sum = 0.0f;
+                for (int k = begin; k < end; k++)
+                    sum += A->vals[k] * x[A->col_idx[k]];
+                y[i] = sum;
+                rows++;
+                work += end - begin;
+            }
+            c->stats.rows[tid] = rows;
+            c->stats.work[tid] = work;
+        }
     }
 
 }

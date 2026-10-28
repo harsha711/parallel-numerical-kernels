@@ -1,0 +1,4 @@
+=== 1 thread ===
+threads=1 N=200000000 best_time=0.201649 s bandwidth=23.80 GB/s (sink=21.000)
+=== 16 threads ===
+threads=16 N=200000000 best_time=0.057812 s bandwidth=83.03 GB/s (sink=21.000)

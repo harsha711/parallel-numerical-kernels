@@ -1,0 +1,6 @@
+Reading sparse matrix from file (matrices/D6-6.mtx): done
+
+file=matrices/D6-6.mtx rows=120576 cols=23740 nonzeros=146880
+storage: COO 1.76 MB, CSR 1.66 MB (CSR/COO = 0.940)
+	Performing 800 iterations
+	benchmarking CSR-SpMV:   0.4839 ms (  0.61 GFLOP/s   5.6 GB/s)

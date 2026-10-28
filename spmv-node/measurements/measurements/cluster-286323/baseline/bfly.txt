@@ -1,0 +1,6 @@
+Reading sparse matrix from file (matrices/bfly.mtx): done
+
+file=matrices/bfly.mtx rows=49152 cols=49152 nonzeros=196608
+storage: COO 2.36 MB, CSR 1.77 MB (CSR/COO = 0.750)
+	Performing 800 iterations
+	benchmarking CSR-SpMV:   0.2029 ms (  1.94 GFLOP/s  13.6 GB/s)

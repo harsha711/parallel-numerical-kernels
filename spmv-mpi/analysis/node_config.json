@@ -1,0 +1,10 @@
+{
+  "_comment": "Full-node reference roof for the heterogeneous one-rank-per-node sweep: AMD EPYC 7302P, 16 cores, 3.0 GHz base clock, and eight DDR4-3200 channels. Only p=4 and p=8 used homogeneous EPYC 7302P allocations, so this is a reference rather than a common roof for every point.",
+  "_comment_fma": "Zen 2 can execute two 256-bit AVX2 FMAs per core per cycle. Each vector holds 8 fp32 values and each FMA counts as 2 FLOPs, giving a theoretical 1536 GFLOP/s for 16 cores at 3.0 GHz.",
+  "memory_bandwidth_gbs": 204.8,
+  "clock_ghz": 3.0,
+  "cores_per_node": 16,
+  "simd_lanes_fp32": 8,
+  "vector_fma_per_core_cycle": 2,
+  "flops_per_cycle_per_fma": 2
+}
